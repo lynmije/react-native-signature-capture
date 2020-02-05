@@ -8,6 +8,8 @@
 @interface RSSignatureView : RCTView
 @property (nonatomic, strong) PPSSignatureView *sign;
 @property (nonatomic, strong) RSSignatureViewManager *manager;
+@property (nonatomic, strong) UIColor *strokeColor;
+@property (nonatomic) BOOL *showDashedBorder;
 -(void) onSaveButtonPressed;
 -(void) onClearButtonPressed;
 -(void) saveImage;

@@ -16,7 +16,6 @@
 	UILabel *titleLabel;
 	BOOL _rotateClockwise;
 	BOOL _square;
-	BOOL _showBorder;
 	BOOL _showNativeButtons;
 	BOOL _showTitleLabel;
 }
@@ -26,16 +25,17 @@
 
 - (instancetype)init
 {
-  _showBorder = YES;
 	_showNativeButtons = YES;
 	_showTitleLabel = YES;
 	if ((self = [super init])) {
-		_border = [CAShapeLayer layer];
-		_border.strokeColor = [UIColor blackColor].CGColor;
-		_border.fillColor = nil;
-		_border.lineDashPattern = @[@4, @2];
+		if (self.showDashedBorder) {
+			_border = [CAShapeLayer layer];
+			_border.strokeColor = [UIColor blackColor].CGColor;
+			_border.fillColor = nil;
+			_border.lineDashPattern = @[@4, @2];
 
-		[self.layer addSublayer:_border];
+			[self.layer addSublayer:_border];
+		}
 	}
 
 	return self;
@@ -64,6 +64,8 @@
 		sign = [[PPSSignatureView alloc]
 						initWithFrame: CGRectMake(0, 0, screen.width, screen.height)
 						context: _context];
+		sign.backgroundColor = self.backgroundColor;
+        sign.strokeColor = self.strokeColor;
 		sign.manager = manager;
 
 		[self addSubview:sign];
@@ -155,8 +157,10 @@
 
 	}
 	_loaded = true;
-	_border.path = _showBorder ? [UIBezierPath bezierPathWithRect:self.bounds].CGPath : nil;
-	_border.frame = self.bounds;
+    if (self.showDashedBorder) {
+        _border.path = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
+        _border.frame = self.bounds;
+    }
 }
 
 - (void)setRotateClockwise:(BOOL)rotateClockwise {
@@ -165,10 +169,6 @@
 
 - (void)setSquare:(BOOL)square {
 	_square = square;
-}
-
-- (void)setShowBorder:(BOOL)showBorder {
-	_showBorder = showBorder;
 }
 
 - (void)setShowNativeButtons:(BOOL)showNativeButtons {
